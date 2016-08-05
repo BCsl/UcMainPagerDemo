@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">UcMainPagerDemo</string>
+
+    <string name="behavior_contents">github.hellocsl.ucmainpager.behavior.uc.UcNewsContentBehavior</string>
+    <string name="behavior_uc_header_pager">github.hellocsl.ucmainpager.behavior.uc.UcNewsHeaderPagerBehavior</string>
+    <string name="behavior_uc_title">github.hellocsl.ucmainpager.behavior.uc.UcNewsTitleBehavior</string>
+    <string name="behavior_uc_news_tab">github.hellocsl.ucmainpager.behavior.uc.UcNewsTabBehavior</string>
+</resources>

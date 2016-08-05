@@ -1,0 +1,31 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="toolbarStyle">@style/ClubToolbar</item>
+        <item name="colorControlHighlight">@color/colorPrimary</item>
+    </style>
+
+    <style name="ClubToolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="contentInsetStart">0dp</item>
+        <item name="titleTextAppearance">@style/ToolbarTextAppearance</item>
+        <item name="subtitleTextAppearance">@style/ToolbarSubTitleTextAppearance</item>
+        <!-- 设置该属性解决空白部分-->
+    </style>
+
+    <style name="ToolbarTextAppearance"
+           parent="@style/TextAppearance.AppCompat.Title">
+        <item name="android:textColor">@color/colorPrimaryIcons</item>
+    </style>
+
+    <style name="ToolbarSubTitleTextAppearance"
+           parent="@style/TextAppearance.AppCompat.Subhead">
+        <item name="android:textColor">@color/colorPrimaryLight</item>
+    </style>
+</resources>
