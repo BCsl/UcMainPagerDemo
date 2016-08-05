@@ -6,7 +6,7 @@ Use custom behavior to implement UC Browser 's MainPager UI
 
 ## ScreenShot
 
-![CUSTOM BEHAVIOR](https://github.com/BCsl/GoogleWidget/blob/master/distribution/NestedScroll2.gif)
+![CUSTOM BEHAVIOR](https://raw.githubusercontent.com/BCsl/GoogleWidget/master/distribution/NestedScroll2.gif)
 
 ## License
 
