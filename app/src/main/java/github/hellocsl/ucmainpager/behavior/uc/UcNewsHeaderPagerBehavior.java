@@ -3,6 +3,8 @@ package github.hellocsl.ucmainpager.behavior.uc;
 import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -68,7 +70,7 @@ public class UcNewsHeaderPagerBehavior extends ViewOffsetBehavior {
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onStartNestedScroll: ");
         }
-        return (nestedScrollAxes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0 && canScroll(child, 0) && !isClosed(child);
+        return (nestedScrollAxes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0 && canScroll(child, 0) && isOnRVTop(child, target);
     }
 
 
@@ -88,6 +90,21 @@ public class UcNewsHeaderPagerBehavior extends ViewOffsetBehavior {
         return mCurState == STATE_CLOSED;
     }
 
+    /**
+     * to judge whether current recyclerview'item is at the top of recyclerview
+     *
+     * @param child
+     * @param target
+     * @return
+     */
+    private boolean isOnRVTop(View child, View target) {
+        if (target instanceof RecyclerView) {
+            boolean isRVTop = ((LinearLayoutManager) ((RecyclerView) target)
+                    .getLayoutManager()).findFirstCompletelyVisibleItemPosition() == 0;
+            return isRVTop;
+        }
+        return true;
+    }
 
     private void changeState(int newState) {
         if (mCurState != newState) {
@@ -113,6 +130,8 @@ public class UcNewsHeaderPagerBehavior extends ViewOffsetBehavior {
     public boolean onInterceptTouchEvent(CoordinatorLayout parent, final View child, MotionEvent ev) {
         if (ev.getAction() == MotionEvent.ACTION_UP && !isClosed()) {
             handleActionUp(parent, child);
+        } else if (ev.getAction() == MotionEvent.ACTION_UP && isClosed()) {
+            handleActionDown(parent, child);
         }
         return super.onInterceptTouchEvent(parent, child, ev);
     }
@@ -150,6 +169,22 @@ public class UcNewsHeaderPagerBehavior extends ViewOffsetBehavior {
             mFlingRunnable.scrollToClosed(DURATION_SHORT);
         } else {
             mFlingRunnable.scrollToOpen(DURATION_SHORT);
+        }
+    }
+
+    private void handleActionDown(CoordinatorLayout parent, final View child) {
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "handleActionUp: ");
+        }
+        if (mFlingRunnable != null) {
+            child.removeCallbacks(mFlingRunnable);
+            mFlingRunnable = null;
+        }
+        mFlingRunnable = new FlingRunnable(parent, child);
+        if (child.getTranslationY() > getHeaderOffsetRange() / 3 * 2) {
+            mFlingRunnable.scrollToOpen(DURATION_SHORT);
+        } else {
+            mFlingRunnable.scrollToClosed(DURATION_SHORT);
         }
 
     }
