@@ -68,9 +68,16 @@ public class UcNewsHeaderPagerBehavior extends ViewOffsetBehavior {
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "onStartNestedScroll: ");
         }
-        return (nestedScrollAxes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0 && canScroll(child, 0) && !isClosed(child);
+        return (nestedScrollAxes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
     }
 
+    /**
+     * settle here
+     */
+    @Override
+    public void onStopNestedScroll(CoordinatorLayout coordinatorLayout, View child, View target) {
+        handleActionUp(coordinatorLayout,child);
+    }
 
     @Override
     public boolean onNestedPreFling(CoordinatorLayout coordinatorLayout, View child, View target, float velocityX, float velocityY) {
@@ -114,13 +121,13 @@ public class UcNewsHeaderPagerBehavior extends ViewOffsetBehavior {
         return false;
     }
 
-    @Override
-    public boolean onInterceptTouchEvent(CoordinatorLayout parent, final View child, MotionEvent ev) {
-        if (ev.getAction() == MotionEvent.ACTION_UP && !isClosed()) {
-            handleActionUp(parent, child);
-        }
-        return super.onInterceptTouchEvent(parent, child, ev);
-    }
+//    @Override
+//    public boolean onInterceptTouchEvent(CoordinatorLayout parent, final View child, MotionEvent ev) {
+//        if (ev.getAction() == MotionEvent.ACTION_UP && !isClosed()) {
+//            handleActionUp(parent, child);
+//        }
+//        return super.onInterceptTouchEvent(parent, child, ev);
+//    }
 
     @Override
     public void onNestedPreScroll(CoordinatorLayout coordinatorLayout, View child, View target, int dx, int dy, int[] consumed) {
