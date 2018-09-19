@@ -75,6 +75,11 @@ public class UcNewsHeaderPagerBehavior extends ViewOffsetBehavior {
     @Override
     public boolean onNestedPreFling(CoordinatorLayout coordinatorLayout, View child, View target, float velocityX, float velocityY) {
         // consumed the flinging behavior until Closed
+
+        //we don't take the fling,just let the target(NestedScrollingChild) to handle it
+        if (child.getTranslationY() ==0)
+            return false;
+
         return !isClosed(child);
     }
 
@@ -126,9 +131,9 @@ public class UcNewsHeaderPagerBehavior extends ViewOffsetBehavior {
             child.setTranslationY(halfOfDis > 0 ? getHeaderOffsetRange() : 0);
         } else {
             child.setTranslationY(child.getTranslationY() - halfOfDis);
+            consumed[1] = dy;
         }
-        //consumed all scroll behavior after we started Nested Scrolling
-        consumed[1] = dy;
+
     }
 
 
