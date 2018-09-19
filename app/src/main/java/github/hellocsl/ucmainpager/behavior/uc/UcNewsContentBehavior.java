@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.List;
@@ -21,6 +22,7 @@ import github.hellocsl.ucmainpager.behavior.helper.HeaderScrollingViewBehavior;
  */
 public class UcNewsContentBehavior extends HeaderScrollingViewBehavior {
     private static final String TAG = "UcNewsContentBehavior";
+    private float lastX, lastY;
 
     public UcNewsContentBehavior() {
     }
@@ -48,6 +50,23 @@ public class UcNewsContentBehavior extends HeaderScrollingViewBehavior {
 
     }
 
+    @Override
+    public boolean onInterceptTouchEvent(CoordinatorLayout parent, View child, MotionEvent ev) {
+        if (ev.getActionMasked() == MotionEvent.ACTION_DOWN) {
+            lastX = ev.getX();
+            lastY = ev.getY();
+        }
+
+        if (ev.getActionMasked() == MotionEvent.ACTION_MOVE) {
+            float currX = ev.getX();
+            float currY = ev.getY();
+            boolean horizontalScroll = Math.abs(currX - lastX) / Math.abs(currY - lastY) > 1;
+            if (horizontalScroll && child.getTranslationY() == 0)
+                return true;
+        }
+
+        return super.onInterceptTouchEvent(parent, child, ev);
+    }
 
     @Override
     protected View findFirstDependency(List<View> views) {
