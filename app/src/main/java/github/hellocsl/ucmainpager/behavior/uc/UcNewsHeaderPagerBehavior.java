@@ -142,9 +142,9 @@ public class UcNewsHeaderPagerBehavior extends ViewOffsetBehavior {
     @Override
     public void onNestedPreScroll(CoordinatorLayout coordinatorLayout, View child, View target, int dx, int dy, int[] consumed) {
         //dy>0 scroll up;dy<0,scroll down
-        //we don't consume at the first time when header is closed and scroll down,maybe NestedScrollingChild need it now,
+        //we don't consume at the first time when header is not closed and scroll down,maybe NestedScrollingChild need it now,
         // we consume the rest dy in onNestedScroll method
-        if (child.getTranslationY() != getHeaderOffsetRange() && dy < 0)
+        if (child.getTranslationY() >= getHeaderOffsetRange() && dy < 0)
             return;
 
         float halfOfDis = dy / 4.0f;
