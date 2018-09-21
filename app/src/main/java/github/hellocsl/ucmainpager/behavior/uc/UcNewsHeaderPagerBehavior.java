@@ -5,7 +5,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.OverScroller;
 
@@ -76,7 +75,7 @@ public class UcNewsHeaderPagerBehavior extends ViewOffsetBehavior {
      */
     @Override
     public void onStopNestedScroll(CoordinatorLayout coordinatorLayout, View child, View target) {
-        handleActionUp(coordinatorLayout,child);
+        settle(coordinatorLayout, child);
     }
 
     @Override
@@ -84,7 +83,7 @@ public class UcNewsHeaderPagerBehavior extends ViewOffsetBehavior {
         // consumed the flinging behavior until Closed
 
         //we don't take the fling,just let the target(NestedScrollingChild) to handle it
-        if (child.getTranslationY() ==0)
+        if (child.getTranslationY() == 0)
             return false;
 
         return !isClosed(child);
@@ -124,15 +123,30 @@ public class UcNewsHeaderPagerBehavior extends ViewOffsetBehavior {
 //    @Override
 //    public boolean onInterceptTouchEvent(CoordinatorLayout parent, final View child, MotionEvent ev) {
 //        if (ev.getAction() == MotionEvent.ACTION_UP && !isClosed()) {
-//            handleActionUp(parent, child);
+//            settle(parent, child);
 //        }
 //        return super.onInterceptTouchEvent(parent, child, ev);
 //    }
 
+
+    @Override
+    public void onNestedScroll(CoordinatorLayout coordinatorLayout, View child, View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
+        float halfOfDis = dyUnconsumed / 4.0f;
+        if (!canScroll(child, halfOfDis)) {
+            child.setTranslationY(halfOfDis > 0 ? getHeaderOffsetRange() : 0);
+        } else {
+            child.setTranslationY(child.getTranslationY() - halfOfDis);
+        }
+    }
+
     @Override
     public void onNestedPreScroll(CoordinatorLayout coordinatorLayout, View child, View target, int dx, int dy, int[] consumed) {
-        super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed);
         //dy>0 scroll up;dy<0,scroll down
+        //we don't consume at the first time when header is closed and scroll down,maybe NestedScrollingChild need it now,
+        // we consume the rest dy in onNestedScroll method
+        if (child.getTranslationY() != getHeaderOffsetRange() && dy < 0)
+            return;
+
         float halfOfDis = dy / 4.0f;
         if (!canScroll(child, halfOfDis)) {
             child.setTranslationY(halfOfDis > 0 ? getHeaderOffsetRange() : 0);
@@ -149,9 +163,9 @@ public class UcNewsHeaderPagerBehavior extends ViewOffsetBehavior {
     }
 
 
-    private void handleActionUp(CoordinatorLayout parent, final View child) {
+    private void settle(CoordinatorLayout parent, final View child) {
         if (BuildConfig.DEBUG) {
-            Log.d(TAG, "handleActionUp: ");
+            Log.d(TAG, "settle: ");
         }
         if (mFlingRunnable != null) {
             child.removeCallbacks(mFlingRunnable);
